@@ -8,6 +8,7 @@ import (
 type UserUcase interface {
 	RegisterCustomer(ctx *gin.Context, customer model.MemberParam) error
 	GetUserInfoByEmail(ctx *gin.Context, email string) (model.Member, error)
+	GetUserFriends(ctx *gin.Context, userID int) ([]model.Member, error)
 }
 
 type GatheringUcase interface {

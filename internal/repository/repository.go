@@ -9,6 +9,7 @@ type UserRepository interface {
 	RegisterUser(user model.MemberParam) error
 	GetUserByEmail(email string) (model.Member, error)
 	GetUserByID(userID int) (model.Member, error)
+	GetUserExcludeMe(userID int) ([]model.Member, error)
 	BeginTx() (*sql.Tx, error)
 }
 

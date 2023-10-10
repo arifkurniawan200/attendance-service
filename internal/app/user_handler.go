@@ -283,3 +283,44 @@ func (u handler) RejectInvitation(c *gin.Context) {
 	})
 	return
 }
+
+func (u handler) UserFriend(c *gin.Context) {
+
+	claims, exists := c.Get("claims")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid or missing claims",
+		})
+		return
+	}
+
+	claimsMap, ok := claims.(jwt.MapClaims)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to claims map",
+		})
+		return
+	}
+
+	userId, ok := claimsMap["id"].(float64)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get user id",
+		})
+		return
+	}
+
+	data, err := u.User.GetUserFriends(c, int(userId))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseFailed{
+			Messages: "failed to reject invitation",
+			Error:    err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, ResponseSuccess{
+		Messages: "success fetch user friends",
+		Data:     data,
+	})
+	return
+}

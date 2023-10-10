@@ -30,6 +30,7 @@ func Run(u usecase.UserUcase, t usecase.GatheringUcase) {
 		member.POST("/gathering/:id/send", h.SendInvitation)
 		member.PUT("/gathering/:id/reject", h.RejectInvitation)
 		member.PUT("/gathering/:id/approve", h.ApproveInvitation)
+		member.GET("/friends", h.UserFriend)
 	}
 	var wg sync.WaitGroup
 

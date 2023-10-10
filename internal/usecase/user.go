@@ -22,6 +22,10 @@ func NewUserUsecase(u repository.UserRepository, t repository.GatheringRepositor
 	return &UserHandler{u, t}
 }
 
+func (u UserHandler) GetUserFriends(ctx *gin.Context, userID int) ([]model.Member, error) {
+	return u.u.GetUserExcludeMe(userID)
+}
+
 func (u UserHandler) GetUserInfoByEmail(ctx *gin.Context, email string) (model.Member, error) {
 	var (
 		err error

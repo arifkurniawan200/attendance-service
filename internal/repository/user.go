@@ -21,6 +21,34 @@ func (h UserHandler) BeginTx() (*sql.Tx, error) {
 	})
 }
 
+func (h UserHandler) GetUserExcludeMe(userId int) ([]model.Member, error) {
+	var (
+		datas []model.Member
+		err   error
+	)
+	query := fmt.Sprintf(baseGetMember, `WHERE id != ?`)
+	rows, err := h.db.Query(query, userId)
+	if err != nil {
+		return datas, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var data model.Member
+		if err = rows.Scan(&data.ID, &data.FirstName, &data.LastName, &data.Email, &data.Password,
+			&data.CreatedAt, &data.UpdatedAt, &data.DeletedAt,
+		); err != nil {
+			return datas, err
+		}
+		datas = append(datas, data)
+	}
+
+	if err = rows.Err(); err != nil {
+		return datas, err
+	}
+	return datas, err
+}
+
 func (h UserHandler) GetUserByID(userID int) (model.Member, error) {
 	var (
 		data model.Member
