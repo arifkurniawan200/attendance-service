@@ -23,16 +23,10 @@ func Run(u usecase.UserUcase, t usecase.TransactionUcase) {
 	e.POST("/register", h.RegisterUser)
 	e.POST("/login", h.LoginUser)
 
-	customer := e.Group("/customer")
+	customer := e.Group("/member")
 	{
 		customer.Use(JWTMiddleware("secret")) // still default,can change anytime (i suggest i should placed in  .env)
 	}
-	admin := e.Group("/admin")
-	{
-		admin.Use(JWTMiddleware("secret")) // still default,can change anytime (i suggest i should placed in  .env)
-		admin.Use(AdminMiddleware())
-	}
-
 	var wg sync.WaitGroup
 
 	wg.Add(1)

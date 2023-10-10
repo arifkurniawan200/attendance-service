@@ -6,8 +6,8 @@ import (
 )
 
 type UserRepository interface {
-	RegisterUser(user model.UserParam) error
-	GetUserByEmail(email string) (model.User, error)
+	RegisterUser(user model.MemberParam) error
+	GetUserByEmail(email string) (model.Member, error)
 	BeginTx() (*sql.Tx, error)
 }
 

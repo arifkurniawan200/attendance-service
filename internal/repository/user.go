@@ -20,28 +20,27 @@ func (h UserHandler) BeginTx() (*sql.Tx, error) {
 	})
 }
 
-func (h UserHandler) RegisterUser(c model.UserParam) error {
-	_, err := h.db.Exec(insertNewCostumer, c.NIK, c.FullName, c.BornPlace, c.BornDate, false, c.Email, c.Password)
+func (h UserHandler) RegisterUser(c model.MemberParam) error {
+	_, err := h.db.Exec(insertNewMembers, c.FirstName, c.LastName, c.Email, c.Password)
 	if err != nil {
 		return err
 	}
 	return err
 }
 
-func (h UserHandler) GetUserByEmail(email string) (model.User, error) {
+func (h UserHandler) GetUserByEmail(email string) (model.Member, error) {
 	var (
-		data model.User
+		data model.Member
 		err  error
 	)
-	rows, err := h.db.Query(getCostumerByEmail, email)
+	rows, err := h.db.Query(getMembersByEmail, email)
 	if err != nil {
 		return data, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		if err = rows.Scan(&data.ID, &data.NIK, &data.FullName, &data.BornPlace, &data.BornDate, &data.IsAdmin,
-			&data.Email, &data.Password,
+		if err = rows.Scan(&data.ID, &data.FirstName, &data.LastName, &data.Email, &data.Password,
 			&data.CreatedAt, &data.UpdatedAt, &data.DeletedAt,
 		); err != nil {
 			return data, err

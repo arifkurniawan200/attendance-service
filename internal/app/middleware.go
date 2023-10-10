@@ -60,36 +60,3 @@ func JWTMiddleware(secretKey string) gin.HandlerFunc {
 		c.Set("claims", claims)
 	}
 }
-
-// AdminMiddleware memeriksa apakah pengguna adalah admin berdasarkan klaim JWT.
-func AdminMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		claims, exists := c.Get("claims")
-		if !exists {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"message": "Invalid or missing claims",
-			})
-			c.Abort()
-			return
-		}
-
-		// Periksa apakah klaim "is_admin" ada dan bernilai true
-		claimsMap, ok := claims.(jwt.MapClaims)
-		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"message": "Failed to parse claims",
-			})
-			c.Abort()
-			return
-		}
-
-		isAdmin, ok := claimsMap["is_admin"].(bool)
-		if !ok || !isAdmin {
-			c.JSON(http.StatusForbidden, gin.H{
-				"message": "Access denied. User is not an admin",
-			})
-			c.Abort()
-			return
-		}
-	}
-}

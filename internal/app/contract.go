@@ -3,9 +3,8 @@ package app
 import "github.com/golang-jwt/jwt/v5"
 
 type jwtCustomClaims struct {
-	Email   string `json:"email"`
-	IsAdmin bool   `json:"is_admin"`
-	ID      int64  `json:"id"`
+	Email string `json:"email"`
+	ID    int64  `json:"id"`
 	jwt.RegisteredClaims
 }
 

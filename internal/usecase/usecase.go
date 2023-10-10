@@ -6,8 +6,8 @@ import (
 )
 
 type UserUcase interface {
-	RegisterCustomer(ctx *gin.Context, customer model.UserParam) error
-	GetUserInfoByEmail(ctx *gin.Context, email string) (model.User, error)
+	RegisterCustomer(ctx *gin.Context, customer model.MemberParam) error
+	GetUserInfoByEmail(ctx *gin.Context, email string) (model.Member, error)
 }
 
 type TransactionUcase interface {

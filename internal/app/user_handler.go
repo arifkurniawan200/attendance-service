@@ -11,7 +11,7 @@ import (
 )
 
 func (u handler) RegisterUser(c *gin.Context) {
-	customer := new(model.UserParam)
+	customer := new(model.MemberParam)
 	if err := c.Bind(customer); err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseFailed{
 			Messages: "failed to register user",
@@ -66,7 +66,6 @@ func (u handler) LoginUser(c *gin.Context) {
 	}
 	claims := &jwtCustomClaims{
 		userInfo.Email,
-		userInfo.IsAdmin,
 		int64(userInfo.ID),
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 1)),
