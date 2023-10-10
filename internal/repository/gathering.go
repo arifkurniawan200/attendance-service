@@ -2,10 +2,10 @@ package repository
 
 import "database/sql"
 
-type TransactionHandler struct {
+type GatheringHandler struct {
 	db *sql.DB
 }
 
-func NewTransactionRepository(db *sql.DB) TransactionRepository {
-	return &TransactionHandler{db}
+func NewGatheringRepository(db *sql.DB) GatheringRepository {
+	return &GatheringHandler{db}
 }

@@ -11,5 +11,5 @@ type UserRepository interface {
 	BeginTx() (*sql.Tx, error)
 }
 
-type TransactionRepository interface {
+type GatheringRepository interface {
 }

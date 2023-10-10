@@ -11,14 +11,14 @@ import (
 
 type UserHandler struct {
 	u repository.UserRepository
-	t repository.TransactionRepository
+	t repository.GatheringRepository
 }
 
 const (
 	secret = "abc&1*~#^2^#s0^=)^^7%b34"
 )
 
-func NewUserUsecase(u repository.UserRepository, t repository.TransactionRepository) UserUcase {
+func NewUserUsecase(u repository.UserRepository, t repository.GatheringRepository) UserUcase {
 	return &UserHandler{u, t}
 }
 

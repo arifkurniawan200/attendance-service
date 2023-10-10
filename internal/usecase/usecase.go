@@ -10,5 +10,5 @@ type UserUcase interface {
 	GetUserInfoByEmail(ctx *gin.Context, email string) (model.Member, error)
 }
 
-type TransactionUcase interface {
+type GatheringUcase interface {
 }
