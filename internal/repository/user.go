@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"template/internal/model"
 )
 
@@ -33,7 +34,8 @@ func (h UserHandler) GetUserByEmail(email string) (model.Member, error) {
 		data model.Member
 		err  error
 	)
-	rows, err := h.db.Query(getMembersByEmail, email)
+	query := fmt.Sprintf(baseGetMember, `WHERE email = ?`)
+	rows, err := h.db.Query(query, email)
 	if err != nil {
 		return data, err
 	}

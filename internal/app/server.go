@@ -8,24 +8,25 @@ import (
 )
 
 type handler struct {
-	User        usecase.UserUcase
-	Transaction usecase.TransactionUcase
+	User      usecase.UserUcase
+	Gathering usecase.GatheringUcase
 }
 
-func Run(u usecase.UserUcase, t usecase.TransactionUcase) {
+func Run(u usecase.UserUcase, t usecase.GatheringUcase) {
 	e := gin.Default()
 
 	h := handler{
-		User:        u,
-		Transaction: t,
+		User:      u,
+		Gathering: t,
 	}
 
 	e.POST("/register", h.RegisterUser)
 	e.POST("/login", h.LoginUser)
 
-	customer := e.Group("/member")
+	member := e.Group("/member")
 	{
-		customer.Use(JWTMiddleware("secret")) // still default,can change anytime (i suggest i should placed in  .env)
+		member.Use(JWTMiddleware("secret")) // still default,can change anytime (i suggest i should placed in  .env)
+		member.POST("/gathering", h.CreateGathering)
 	}
 	var wg sync.WaitGroup
 

@@ -11,4 +11,5 @@ type UserUcase interface {
 }
 
 type GatheringUcase interface {
+	CreateNewGathering(ctx *gin.Context, g model.GatheringParam) error
 }

@@ -12,4 +12,6 @@ type UserRepository interface {
 }
 
 type GatheringRepository interface {
+	CreateNewGatheringTx(tx *sql.Tx, g model.GatheringParam) (int64, error)
+	AddAttendeeTx(tx *sql.Tx, a model.Attendee) error
 }

@@ -87,3 +87,63 @@ func (u handler) LoginUser(c *gin.Context) {
 	})
 	return
 }
+
+func (u handler) CreateGathering(c *gin.Context) {
+	gathering := new(model.GatheringParam)
+	if err := c.Bind(gathering); err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseFailed{
+			Messages: "failed to register user",
+			Error:    err.Error(),
+		})
+		return
+	}
+
+	validator := validator.New()
+
+	// Validasi struktur data customer
+	if err := validator.Struct(gathering); err != nil {
+		c.JSON(http.StatusBadRequest, ResponseFailed{
+			Messages: "invalid payload",
+			Error:    err.Error()})
+		return
+	}
+
+	claims, exists := c.Get("claims")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid or missing claims",
+		})
+		return
+	}
+
+	claimsMap, ok := claims.(jwt.MapClaims)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to claims map",
+		})
+		return
+	}
+
+	userId, ok := claimsMap["id"].(float64)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get user id",
+		})
+		return
+	}
+
+	gathering.Creator = int64(userId)
+
+	err := u.Gathering.CreateNewGathering(c, *gathering)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseFailed{
+			Messages: "failed to create gathering",
+			Error:    err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusCreated, ResponseSuccess{
+		Messages: "success create gathering",
+	})
+	return
+}
