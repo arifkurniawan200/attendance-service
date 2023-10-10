@@ -18,6 +18,76 @@ func NewGatheringUsecase(g repository.GatheringRepository, u repository.UserRepo
 	return &GatheringHandler{g, u}
 }
 
+func (t GatheringHandler) ApproveInvitation(ctx *gin.Context, data model.Invitation) error {
+	gathering, err := t.g.GetGathering(data.GatheringID)
+	if err != nil {
+		return err
+	}
+
+	creator, err := t.u.GetUserByID(gathering.Creator)
+	if err != nil {
+		return err
+	}
+
+	err = t.g.UpdateInvitation(model.Invitation{
+		Status:      model.InvitationStatusApprove,
+		GatheringID: data.GatheringID,
+		MemberID:    data.MemberID,
+	})
+	if err != nil {
+		return err
+	}
+
+	go func(notification utils.Notification) {
+		err = utils.SendNotification(notification)
+		if err != nil {
+			return
+		}
+	}(utils.Notification{
+		Type:    utils.NotificationTypeEmail,
+		Subject: "Confirmation Join Gathering",
+		Target:  creator.Email,
+		Body:    fmt.Sprintf("Someone have confirmation join %s, check your gathering information to show details", gathering.Name),
+	})
+
+	return err
+}
+
+func (t GatheringHandler) RejectInvitation(ctx *gin.Context, data model.Invitation) error {
+	gathering, err := t.g.GetGathering(data.GatheringID)
+	if err != nil {
+		return err
+	}
+
+	creator, err := t.u.GetUserByID(gathering.Creator)
+	if err != nil {
+		return err
+	}
+
+	err = t.g.UpdateInvitation(model.Invitation{
+		Status:      model.InvitationStatusReject,
+		GatheringID: data.GatheringID,
+		MemberID:    data.MemberID,
+	})
+	if err != nil {
+		return err
+	}
+
+	go func(notification utils.Notification) {
+		err = utils.SendNotification(notification)
+		if err != nil {
+			return
+		}
+	}(utils.Notification{
+		Type:    utils.NotificationTypeEmail,
+		Subject: "Reject Gathering",
+		Target:  creator.Email,
+		Body:    fmt.Sprintf("Someone have confirmation and reject your invitation gathering %s, check your gathering information to show details", gathering.Name),
+	})
+
+	return err
+}
+
 func (t GatheringHandler) SendInvitation(ctx *gin.Context, userID, gatheringID int) error {
 	gathering, err := t.g.GetGathering(gatheringID)
 	if err != nil {

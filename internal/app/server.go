@@ -28,6 +28,8 @@ func Run(u usecase.UserUcase, t usecase.GatheringUcase) {
 		member.Use(JWTMiddleware("secret")) // still default,can change anytime (i suggest i should placed in  .env)
 		member.POST("/gathering", h.CreateGathering)
 		member.POST("/gathering/:id/send", h.SendInvitation)
+		member.PUT("/gathering/:id/reject", h.RejectInvitation)
+		member.PUT("/gathering/:id/approve", h.ApproveInvitation)
 	}
 	var wg sync.WaitGroup
 

@@ -191,3 +191,95 @@ func (u handler) SendInvitation(c *gin.Context) {
 	})
 	return
 }
+
+func (u handler) ApproveInvitation(c *gin.Context) {
+
+	claims, exists := c.Get("claims")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid or missing claims",
+		})
+		return
+	}
+
+	claimsMap, ok := claims.(jwt.MapClaims)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to claims map",
+		})
+		return
+	}
+
+	userId, ok := claimsMap["id"].(float64)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get user id",
+		})
+		return
+	}
+
+	idStr := c.Param("id")
+	gatheringID, _ := strconv.Atoi(idStr)
+
+	err := u.Gathering.ApproveInvitation(c, model.Invitation{
+		GatheringID: gatheringID,
+		MemberID:    int(userId),
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseFailed{
+			Messages: "failed to approve invitation",
+			Error:    err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, ResponseSuccess{
+		Messages: "success approve invitation",
+	})
+	return
+}
+
+func (u handler) RejectInvitation(c *gin.Context) {
+
+	claims, exists := c.Get("claims")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid or missing claims",
+		})
+		return
+	}
+
+	claimsMap, ok := claims.(jwt.MapClaims)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to claims map",
+		})
+		return
+	}
+
+	userId, ok := claimsMap["id"].(float64)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get user id",
+		})
+		return
+	}
+
+	idStr := c.Param("id")
+	gatheringID, _ := strconv.Atoi(idStr)
+
+	err := u.Gathering.RejectInvitation(c, model.Invitation{
+		GatheringID: gatheringID,
+		MemberID:    int(userId),
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseFailed{
+			Messages: "failed to reject invitation",
+			Error:    err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, ResponseSuccess{
+		Messages: "success reject invitation",
+	})
+	return
+}

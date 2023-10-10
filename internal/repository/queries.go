@@ -21,4 +21,7 @@ VALUES (?, ?); `
 	getGatheringByUserID = `SELECT id, creator, type, schedule_at, name, location, created_at, updated_at, deleted_at FROM gatherings
 WHERE id = ?
 `
+	queryUpdateInvitation = `UPDATE invitations
+							SET status = ?
+							WHERE gathering_id = ? AND member_id = ?;`
 )

@@ -13,6 +13,14 @@ func NewGatheringRepository(db *sql.DB) GatheringRepository {
 	return &GatheringHandler{db}
 }
 
+func (g GatheringHandler) UpdateInvitation(data model.Invitation) error {
+	_, err := g.db.Exec(queryUpdateInvitation, data.Status, data.GatheringID, data.MemberID)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
 func (g GatheringHandler) GetGathering(gatheringID int) (model.Gathering, error) {
 	var (
 		data model.Gathering

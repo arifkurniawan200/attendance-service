@@ -18,4 +18,5 @@ type GatheringRepository interface {
 	GetAttendee(gatheringID int) ([]model.Attendee, error)
 	SendInvitation(tx *sql.Tx, data model.Invitation) error
 	GetGathering(gatheringID int) (model.Gathering, error)
+	UpdateInvitation(data model.Invitation) error
 }
