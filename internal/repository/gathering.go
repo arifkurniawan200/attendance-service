@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"encoding/json"
 	"template/internal/model"
 )
 
@@ -11,6 +12,42 @@ type GatheringHandler struct {
 
 func NewGatheringRepository(db *sql.DB) GatheringRepository {
 	return &GatheringHandler{db}
+}
+
+func (g GatheringHandler) GetGatheringInfo(gatheringID int) (interface{}, error) {
+	type UserGroup struct {
+		Status string   `json:"status"`
+		Emails []string `json:"emails"`
+	}
+
+	rows, err := g.db.Query(queryGetGatheringInfo, gatheringID, gatheringID, gatheringID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	userGroups := []UserGroup{}
+	for rows.Next() {
+		var status string
+		var emailsJSON string
+		err = rows.Scan(&status, &emailsJSON)
+		if err != nil {
+			return nil, err
+		}
+
+		var emails []string
+		err = json.Unmarshal([]byte(emailsJSON), &emails)
+		if err != nil {
+			return nil, err
+		}
+
+		userGroup := UserGroup{
+			Status: status,
+			Emails: emails,
+		}
+		userGroups = append(userGroups, userGroup)
+	}
+	return userGroups, err
 }
 
 func (g GatheringHandler) UpdateInvitation(data model.Invitation) error {

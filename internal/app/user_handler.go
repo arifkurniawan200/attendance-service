@@ -324,3 +324,22 @@ func (u handler) UserFriend(c *gin.Context) {
 	})
 	return
 }
+
+func (u handler) GetAttendeesInfo(c *gin.Context) {
+	idStr := c.Param("id")
+	gatheringID, _ := strconv.Atoi(idStr)
+
+	data, err := u.Gathering.GetGatheringInfo(c, gatheringID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseFailed{
+			Messages: "failed to get gathering info",
+			Error:    err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, ResponseSuccess{
+		Messages: "success get gathering info",
+		Data:     data,
+	})
+	return
+}

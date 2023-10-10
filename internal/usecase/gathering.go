@@ -18,6 +18,10 @@ func NewGatheringUsecase(g repository.GatheringRepository, u repository.UserRepo
 	return &GatheringHandler{g, u}
 }
 
+func (t GatheringHandler) GetGatheringInfo(ctx *gin.Context, gatheringID int) (interface{}, error) {
+	return t.g.GetGatheringInfo(gatheringID)
+}
+
 func (t GatheringHandler) ApproveInvitation(ctx *gin.Context, data model.Invitation) error {
 	gathering, err := t.g.GetGathering(data.GatheringID)
 	if err != nil {

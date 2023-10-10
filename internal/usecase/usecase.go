@@ -16,4 +16,5 @@ type GatheringUcase interface {
 	SendInvitation(ctx *gin.Context, userID, gatheringID int) error
 	ApproveInvitation(ctx *gin.Context, data model.Invitation) error
 	RejectInvitation(ctx *gin.Context, data model.Invitation) error
+	GetGatheringInfo(ctx *gin.Context, gatheringID int) (interface{}, error)
 }

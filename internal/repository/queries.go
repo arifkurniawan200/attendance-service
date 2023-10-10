@@ -24,4 +24,37 @@ WHERE id = ?
 	queryUpdateInvitation = `UPDATE invitations
 							SET status = ?
 							WHERE gathering_id = ? AND member_id = ?;`
+
+	queryGetGatheringInfo = `SELECT
+  'approve' AS status,
+  JSON_ARRAYAGG(u.email) AS emails
+FROM
+  invitations i
+INNER JOIN
+  users u ON i.member_id = u.id
+WHERE
+  i.status = 'Approve'
+  AND i.gathering_id = ?
+UNION
+SELECT
+  'reject' AS status,
+  JSON_ARRAYAGG(u.email) AS emails
+FROM
+  invitations i
+INNER JOIN
+  users u ON i.member_id = u.id
+WHERE
+  i.status = 'Reject'
+  AND i.gathering_id = ?
+UNION
+SELECT
+  'sent' AS status,
+  JSON_ARRAYAGG(u.email) AS emails
+FROM
+  invitations i
+INNER JOIN
+  users u ON i.member_id = u.id
+WHERE
+  i.status = 'Sent'
+  AND i.gathering_id = ?`
 )
