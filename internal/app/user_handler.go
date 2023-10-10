@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"strconv"
 	"template/internal/model"
 	"template/internal/utils"
 	"time"
@@ -144,6 +145,49 @@ func (u handler) CreateGathering(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, ResponseSuccess{
 		Messages: "success create gathering",
+	})
+	return
+}
+
+func (u handler) SendInvitation(c *gin.Context) {
+
+	claims, exists := c.Get("claims")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid or missing claims",
+		})
+		return
+	}
+
+	claimsMap, ok := claims.(jwt.MapClaims)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to claims map",
+		})
+		return
+	}
+
+	userId, ok := claimsMap["id"].(float64)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get user id",
+		})
+		return
+	}
+
+	idStr := c.Param("id")
+	gatheringID, _ := strconv.Atoi(idStr)
+
+	err := u.Gathering.SendInvitation(c, int(userId), gatheringID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ResponseFailed{
+			Messages: "failed to send invitation",
+			Error:    err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, ResponseSuccess{
+		Messages: "success send invitation",
 	})
 	return
 }

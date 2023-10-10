@@ -13,4 +13,12 @@ VALUES (?, ?, ?, ?, ?);
 `
 	addGatheringAttendee = `INSERT INTO attendees (member_id, gathering_id)
 VALUES (?, ?); `
+
+	getAttendee = `SELECT member_id,gathering_id FROM attendees WHERE gathering_id = ?;`
+
+	createNewInvitation = `INSERT INTO invitations (member_id, gathering_id, status) VALUES (?,?,?);`
+
+	getGatheringByUserID = `SELECT id, creator, type, schedule_at, name, location, created_at, updated_at, deleted_at FROM gatherings
+WHERE id = ?
+`
 )

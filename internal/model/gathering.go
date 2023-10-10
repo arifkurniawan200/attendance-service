@@ -25,7 +25,7 @@ func CheckGatheringStatus(status GatheringStatus) bool {
 
 type Gathering struct {
 	ID         int             `json:"id"`
-	Creator    string          `json:"creator"`
+	Creator    int             `json:"creator"`
 	Type       GatheringStatus `json:"type"`
 	ScheduleAt time.Time       `json:"schedule_at"`
 	Name       string          `json:"name"`
