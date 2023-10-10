@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 	"github.com/labstack/gommon/log"
 	"golang.org/x/sync/errgroup"
 	"template/internal/model"
@@ -22,7 +22,7 @@ func NewUserUsecase(u repository.UserRepository, t repository.TransactionReposit
 	return &UserHandler{u, t}
 }
 
-func (u UserHandler) GetUserInfoByEmail(ctx echo.Context, email string) (model.User, error) {
+func (u UserHandler) GetUserInfoByEmail(ctx *gin.Context, email string) (model.User, error) {
 	var (
 		err error
 		g   errgroup.Group
@@ -46,7 +46,7 @@ func (u UserHandler) GetUserInfoByEmail(ctx echo.Context, email string) (model.U
 	return userInfo, err
 }
 
-func (u UserHandler) RegisterCustomer(ctx echo.Context, c model.UserParam) error {
+func (u UserHandler) RegisterCustomer(ctx *gin.Context, c model.UserParam) error {
 	var (
 		err error
 		g   errgroup.Group
