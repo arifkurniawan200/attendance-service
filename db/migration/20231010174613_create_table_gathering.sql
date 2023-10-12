@@ -10,7 +10,7 @@ CREATE TABLE gatherings (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP DEFAULT NULL,
-    FOREIGN KEY (creator) REFERENCES members(id),
+    FOREIGN KEY (creator) REFERENCES members(id)
 );
 -- +goose StatementEnd
 
